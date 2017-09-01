@@ -1,0 +1,25 @@
+{
+  "name": "babble",
+  "version": "1.0.0",
+  "description": "Chat",
+  "main": "server/main.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/server & http-server -p 8081"
+  },
+  "keywords": [
+    "chat"
+  ],
+  "author": "Amit Berger",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "mocha": "^3.5.0",
+    "sinon": "^3.2.1"
+  },
+  "dependencies": {
+    "http-server": "^0.10.0"
+  }
+}
