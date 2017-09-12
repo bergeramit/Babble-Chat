@@ -40,20 +40,16 @@ var Babble = (function () {
     }
 
     function modalFunctionAnon() {
+        document.getElementById("name_modal").value = "Anonymous";
         obj = {
-            'name': "",
+            'name': "Anonymous",
             'email': "",
         };
-        // babble={
-        //     'userInfo': obj,
-        //     'currentMessage': '',
-        // }
-        // localStorage['babble'] = JSON.stringify(babble);
         register(obj);
-        var modal = document.getElementById("register");
-        modal.style.display = "none";
-        getStats(updateStats);
-        getMessages(counter, updateMessages);
+        // var modal = document.getElementById("register");
+        // modal.style.display = "none";
+        // getStats(updateStats);
+        // getMessages(counter, updateMessages);
     }
 
     function auto_grow(element) {
@@ -187,11 +183,6 @@ var Babble = (function () {
                 'email': document.getElementById("email").value,
             };
             register(obj);
-            // babble={
-            //     'userInfo': obj,
-            //     'currentMessage': '',
-            // }
-            // localStorage['babble'] = JSON.stringify(babble);
             var modal = document.getElementById("register");
             modal.style.display = "none";
 
