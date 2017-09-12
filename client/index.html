@@ -44,23 +44,37 @@
 
         </section>
     </article>
-
-
-    <div class="modal" id="register">
-        <section class="modal-header">
-            <h1>Welcome</h1>
-        </section>
-        <section class="modal-body">
-            <form id="modal-form" class="form-content" method="POST">
-                <label>Name </label><input id="name_modal" type="text" />
-                <label for="email">Email </label><input id="email" type="email" />
-                <input type="submit" class="modal-register-button"></input>
-            </form>
-        </section>
-        <section class="modal-footer">
-            <button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button>
-        </section>
-    </div>
+    <section class="main-modal" id="register">
+        <div class="modal">
+            <section class="modal-header">
+                <h2>Who are you?</h2>
+            </section>
+            <section class="modal-body">
+                <form id="modal-form" class="form-content" method="POST">
+                    <ol>
+                        <li><label>Name: </label>
+                        </li>
+                        <li>
+                            <label for="email">Email: </label>
+                        </li>
+                    </ol>
+                    <ol>
+                        <li>
+                            <input id="name_modal" type="text" />
+                        </li>
+                        <li>
+                            <input id="email" type="email" />
+                        </li>
+                    </ol>
+                    <ul>
+                        <li><button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button></li>
+                        <li><input type="submit" class="modal-register-button"></input>
+                        </li>
+                    </ul>
+                </form>
+            </section>
+        </div>
+    </section>
     <script src="scripts/main.js" type="text/javascript"></script>
 </body>
 
