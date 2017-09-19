@@ -1,9 +1,3 @@
-
-// window.onload = function() {
-//     li_num = 1;
-// };
-//var counter = 0;
-
 var Babble = (function () {
     var counter = 0;
     var newUUID = 0;
@@ -13,6 +7,7 @@ var Babble = (function () {
     addlistenform2();
     addlistenform1();
 
+    //logout beacon
     function ExitUpdate() {
         window.addEventListener('unload', function () {
             navigator.sendBeacon('http://localhost:9000/logout', JSON.stringify(newUUID));
@@ -20,7 +15,7 @@ var Babble = (function () {
     }
 
 
-
+//initial local storage
     function setLocalStrage() {
         var userInfo = {
             name: '',
@@ -34,11 +29,11 @@ var Babble = (function () {
     }
 
 
-
+//remove modal
     function modalFunctionReg() {
         modal.style.display = "none";
     }
-
+//anonymous obj created
     function modalFunctionAnon() {
         document.getElementById("name_modal").value = "Anonymous";
         obj = {
@@ -51,12 +46,12 @@ var Babble = (function () {
         // getStats(updateStats);
         // getMessages(counter, updateMessages);
     }
-
+//text area grow for the message
     function auto_grow(element) {
         element.style.height = "5px";
         element.style.height = (element.scrollHeight) + "px";
     }
-
+//after pressing the x button this function is called
     function deleteMSG(element) {
         var d = element.closest('li');
         var id = d.id;
@@ -69,6 +64,7 @@ var Babble = (function () {
         //update stats
     }
 
+    //delete request to the server
     function deleteMessage(id, callback) {
         var data = '';
         var xhr = new XMLHttpRequest();
@@ -79,17 +75,7 @@ var Babble = (function () {
         xhr.send();
     }
 
-
-
-    // var getGreeter = (function () {
-    //     var counter = 0;
-    //     return function () {
-    //         return counter += 1;
-    //     }
-    // })();
-
     function addLi(msgg) {
-
         var gravatar = 'https://www.gravatar.com/avatar/' + msgg.hash + '.jpg?d=identicon';
         var li_num = msgg.id;//getGreeter();
         var ol = document.getElementById("msgsID");
@@ -99,30 +85,13 @@ var Babble = (function () {
         var img_li = document.createElement('img');
         img_li.setAttribute('id', 'img-msg-' + li_num);
         li.appendChild(img_li);
-
         var article_li = document.createElement('article'); // create all attributes in header
         var cite_article_li = document.createElement('cite');
         cite_article_li.setAttribute('class', 'message-header');
         cite_article_li.setAttribute('id', 'cite-msg-' + li_num);
         article_li.appendChild(cite_article_li);
-
-
-
-        var d = new Date(Number(msgg.timestamp));
-        var timeToShow;
-        if (d.getMinutes() < 10)
-            if (d.getHours() < 10)
-                timeToShow = "0" + d.getHours() + ":0" + d.getMinutes();
-            else
-                timeToShow = d.getHours() + ":0" + d.getMinutes();
-        else
-            if (d.getHours() < 10)
-                timeToShow = "0" + d.getHours() + ":" + d.getMinutes();
-            else
-                timeToShow = d.getHours() + ":" + d.getMinutes();
-
-
-
+        // 00:00
+        var timeToShow = ArrageTime(msgg.timestamp);
         var time = document.createElement('time');
         var innertext = document.createTextNode(timeToShow);
         time.setAttribute('class', 'msg-time');
@@ -151,26 +120,36 @@ var Babble = (function () {
         p.setAttribute('class', 'msg-content');
         p.setAttribute('id', 'content-msg-' + li_num);
         article_li.appendChild(p);
-
         li.appendChild(article_li);
         ol.appendChild(li);
-
         document.getElementById("img-msg-" + li_num).src = encodeURI(gravatar);
         document.getElementById("cite-msg-" + li_num).innerHTML = msgg.name;
-
-
-
         if (msgg.name == Rname) {
             document.getElementById("button-msg-" + li_num).innerHTML = "X";
         }
-
         var oll = document.getElementById("msgsID");
         oll.scrollTop = oll.scrollHeight;
         return li_num;
     }
 
+    //arrage time to make it look with 05:39 instead of 5:39
+    function ArrageTime(ts){
+        var d = new Date(Number(ts));
+        var timeToShow;
+        if (d.getMinutes() < 10)
+            if (d.getHours() < 10)
+                timeToShow = "0" + d.getHours() + ":0" + d.getMinutes();
+            else
+                timeToShow = d.getHours() + ":0" + d.getMinutes();
+        else
+            if (d.getHours() < 10)
+                timeToShow = "0" + d.getHours() + ":" + d.getMinutes();
+            else
+                timeToShow = d.getHours() + ":" + d.getMinutes();
+        return timeToShow;
+    }
 
-
+    //listener for the modal form
     function addlistenform2() {
         var form2 = document.getElementById('modal-form');
         if (form2 == null) {
@@ -198,15 +177,11 @@ var Babble = (function () {
         stats = e;
         counter = stats.messages;
         var users = stats.users;
-
-        //console.log("users",users);
         document.getElementById('newMSG').innerHTML = stats.messages;
         document.getElementById('connected').innerHTML = users;
-
-
         getStats(updateStats);
     }
-
+//send stats request to server
     var getStats = function (callback) {
         var data = '';
         var xhr = new XMLHttpRequest();
@@ -221,7 +196,6 @@ var Babble = (function () {
     //callback /messages?counter=xx
     function updateMessages(e) {
         new_mess = e;
-        console.log("hey hey response", new_mess);
         var msg = new_mess[0];
         if (msg.toDelete == 0) {
             for (var i = 0; i < new_mess.length; ++i) {
@@ -232,17 +206,16 @@ var Babble = (function () {
             }
         } else {
             //delete message
-            console.log("id arrived: ", msg.id);
             var li = document.getElementById(Number(msg.id));
             if (li != null) {
                 var ol = document.getElementById("msgsID");
                 ol.removeChild(li);
-                //li.style.display = "none";
             }
         }
         getMessages(counter, updateMessages);
     }
 
+    //user id generator
     function guid() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
@@ -253,7 +226,7 @@ var Babble = (function () {
             s4() + '-' + s4() + s4() + s4();
     }
 
-
+//send counter to check if needs to update
     var getMessages = function (counter, callback) {
         var data = '';
         var xhr = new XMLHttpRequest();
@@ -317,21 +290,15 @@ var Babble = (function () {
             }
             var info = localStorage['babble'];
             info = JSON.parse(info);
-            //console.log(info);
             var userinfo = info['userInfo'];
-            //console.log(userinfo);
             var name = userinfo['name'];
             var email = userinfo['email'];
-            // data += 'name' + '=' + encodeURIComponent(name) + '&';
-            // data += 'email' + '=' + encodeURIComponent(email) + '&';
-            // data += 'timestamp' + '=' + encodeURIComponent(Date.now()) + '&';
             data.name = name;
             data.email = email;
             data.timestamp = Date.now();
             postMessage(data, updateNone);
         });
     }
-
 
     return {
         auto_grow: auto_grow,
