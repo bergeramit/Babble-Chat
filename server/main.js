@@ -3,17 +3,17 @@ var urlUtil = require('url');
 var crypto = require('crypto');
 var queryUtil = require('querystring');
 var messages = require('./messages-util.js');
-//clients that are waiting
+//clients new messages response wait list
 var clients = [];
+//clients's stats response wait list
 var stats_wait_list = [];
-
-
-var online = 0;
+//next msg ID
 var MSGID = 0;
 
+//send response to /stats
 function pushStats() {
     var stats = {
-        'users': Math.max(stats_wait_list.length,clients.length),
+        'users': Math.max(stats_wait_list.length, clients.length),
         'messages': messages.getNumberOfMessages()
     };
     var upstats;
@@ -23,86 +23,114 @@ function pushStats() {
     }
 }
 
+//handle option call from client
+function HandleOptions(response) {
+    response.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE');
+    response.setHeader('Access-Control-Allow-Headers', 'X-Request-ID');
+    //bad request
+    response.write(http.STATUS_CODES[204] + '\n');
+    response.end();
+}
+
+// handle post new message: send message to all clients and updates stats
+function postMessageFromServer(data, response) {
+    var msg_obj = {
+        'toDelete': 0,
+        'name': data.name,
+        'email': data.email,
+        'message': data.message,
+        'timestamp': data.timestamp,
+        'id': 0,
+        'hash': crypto.createHash('md5').update(String(data.email)).digest("hex")
+    };
+    var msg = [];
+    msg.push(msg_obj);
+    MSGID = messages.addMessage(msg_obj);
+    pushStats();
+    var client;
+    while (clients.length > 0) {
+        client = clients.pop();
+        client.response.end(JSON.stringify(msg));
+    }
+    response.end(JSON.stringify(MSGID));
+}
+
+
+//update delete messages by sending message id to delete and update stats
+function updateDeleteMessage(data, response) {
+    messages.deleteMessage(data);
+    pushStats();
+    var msg_obj = {
+        'toDelete': 1,
+        'id': data
+    };
+    var msg = [];
+    msg.push(msg_obj);
+    var client;
+    while (clients.length > 0) {
+        client = clients.pop();
+        client.response.end(JSON.stringify(msg));
+    }
+    response.end();
+}
+
+
+//remove client from the listeners and update stats
+function removeClient(requestBody) {
+    //get the user to remove
+    var userToDeleteUUIDheader = JSON.parse(requestBody);
+    var userToDeleteUUID = clients.filter(function (user) { return user.request.headers['x-request-id'] === userToDeleteUUIDheader; });
+    //remove from listeners
+    var indexlogout = clients.indexOf(userToDeleteUUID[0]);
+    clients.splice(indexlogout, 1);
+    pushStats();
+}
+
+
 var server = http.createServer(function (request, response) {
     response.setHeader('Access-Control-Allow-Origin', '*');
     var url = urlUtil.parse(request.url, true);
     if (request.method === 'GET') {
-        //var url = urlUtil.parse(request.url);
-        var datacounter = Number(url.query.counter);
         if (url.pathname == '/messages') {
-            console.log("DATA COUNTER");
-            console.log(datacounter);
-            // var msgs=[];
-            // for(var i=datacounter;i<GmessagesCounter;++i){
-            //     msgs.push(Gmessages[i]);
-            // }
+            //check the server counter vs the client's one
+            var datacounter = Number(url.query.counter);
             var msgs = messages.getMessages(datacounter);
             if (msgs.length != 0) {
+                //there are new messages and we need to update the messages counter
                 pushStats();
+                //need to send stats again and keep listening for changes
+                //IOW end of request
                 response.end(JSON.stringify(msgs))
-                //response with new messages
             } else {
+                //this client number of messages is the same in server, so need to listen for changes
                 var waitclient = {
                     request: request,
                     response: response
                 }
+                //added a client to listen to incoming new messages
                 clients.push(waitclient);
                 pushStats();
             }
         } else {
             if (url.pathname == '/stats') {
+                //client need to keep waiting for the stats changes
                 var waitstat = {
                     request: request,
                     response: response
                 }
                 stats_wait_list.push(waitstat);
-                //pushStats();
             }
         }
-        //response.end();
     } else if (request.method === 'POST') {
         if (url.pathname == '/messages') {
-            console.log("start Post New Message");
             var requestBody = '';
             request.on('data', function (chunk) {
                 requestBody += chunk.toString();
             });
             request.on('end', function () {
-                //var url = urlUtil.parse(request.url,true);
                 var data = JSON.parse(requestBody);
                 //'toDelete' 0 for no delete this id, 1 to delete
-                var msg_obj = {
-                    'toDelete': 0,
-                    'name': data.name,
-                    'email': data.email,
-                    'message': data.message,
-                    'timestamp': data.timestamp,
-                    'id': 0,
-                    'hash': crypto.createHash('md5').update(String(data.email)).digest("hex")
-                };
-                var msg = [];
-                msg.push(msg_obj);
-                //Gmessages.push(msg_obj);
-                MSGID = messages.addMessage(msg_obj);
-                console.log('we have all the data ', msg);
-                console.log('pathname: ', url.pathname);
-                // var stats = {
-                //     'users': clients.length,
-                //     'messages': GmessagesCounter
-                // };
-                // var upstats;
-                // while(stats_wait_list.length >0){
-                //     upstats = stats_wait_list.pop();
-                //      upstats.end(JSON.stringify(stats));
-                // }
-                pushStats();
-                var client;
-                while (clients.length > 0) {
-                    client = clients.pop();
-                    client.response.end(JSON.stringify(msg));
-                }
-                console.log("end Post New Message");
-                response.end(JSON.stringify(MSGID));
+                postMessageFromServer(data, response);
             });
         } else if (url.pathname == '/logout') {
             var requestBody = '';
@@ -110,73 +138,27 @@ var server = http.createServer(function (request, response) {
                 requestBody += chunk.toString();
             });
             request.on('end', function () {
-
-                var userToDeleteUUIDheader = JSON.parse(requestBody);
-
-                var userToDeleteUUID = clients.filter(function (user) { return user.request.headers['x-request-id'] === userToDeleteUUIDheader; });
-                var indexlogout = clients.indexOf(userToDeleteUUID[0]);
-                clients.splice(indexlogout, 1);
-                pushStats();
+                removeClient(requestBody);
             });
         }
 
     } else if (request.method === 'DELETE') {
-        console.log("start DELETE");
         var url = urlUtil.parse(request.url);
-        //var data = parseInt(url.pathname.substring(11,url.pathname.length));
-        //url.pathname.replace('\d', '');
-        console.log("data ", url.pathname);
         if (url.pathname.substr(0, 10) == '/messages/') { // should be: url.pathname.substr(0,11) == '/messages/:'
             var data = unescape(url.pathname.substr(10));//should be url.pathname.substr(11)
-            console.log("data ", data);
-            messages.deleteMessage(data);
-
-            //  var msgID = parseInt(data);
-            //  if (msgID > -1) {
-            //      Gmessages.splice(msgID, 1);
-            //  }
-            //  GmessagesCounter = GmessagesCounter - 1;
-            pushStats();
-            var msg_obj = {
-                'toDelete': 1,
-                'id': data
-            };
-            var msg = [];
-            msg.push(msg_obj);
-            var client;
-            while (clients.length > 0) {
-                client = clients.pop();
-                client.response.end(JSON.stringify(msg));
-            }
-            response.end();
+            updateDeleteMessage(data, response);
         } else {
 
         }
-        console.log("end DELETE");
     } else if (request.method === 'OPTIONS') {
-        response.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE');
-        response.setHeader('Access-Control-Allow-Headers', 'X-Request-ID');
-
-        //bad request
-        response.write(http.STATUS_CODES[204] + '\n');
-        response.end();
+        HandleOptions(response);
     } else {
-        console.log("nothing caught ", request.method);
+        //bad request
         response.writeHead(405);
         response.end();
     }
 });
-
 server.listen(9000);
 console.log('listening...');
 
 
-
-
-
-
-
-//var split = data.split(":");
-            //console.log('we have all the data ', data);
-            //res.writeHead(200, {"Content-Type": "text/plain"});
-            //res.end(md5(split[0]));
