@@ -186,9 +186,9 @@ textarea{
     bottom: 0;
     font-family: 'Nunito', sans-serif;
     float: left;
-    height: 71%;
+    height: 100%;
     min-height: 42%;
-    padding: 1rem;
+    padding: 0;
     font-size: 1rem;
     width: 80%;
     border: 0;

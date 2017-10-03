@@ -6,6 +6,7 @@ var Babble = (function () {
     ExitUpdate();
     addlistenform2();
     addlistenform1();
+    textareaAutoGrow();
 
     //logout beacon
     function ExitUpdate() {
@@ -14,6 +15,38 @@ var Babble = (function () {
         });
     }
 
+    window.onkeydown = function (e) {
+        var code = e.keyCode ? e.keyCode : e.which;
+        if(code == 13){
+            var form1 = document.getElementById('message-form');
+            if (form1 == null) {
+                return;
+            }
+            var data = {
+                name: '',
+                email: '',
+                message: '',
+                timestamp: ''
+            };
+            for (var i = 0; i < form1.elements.length; i++) {
+                var element = form1.elements[i];
+                if (element.name == 'message') {
+                    data.message = element.value;
+                    element.innerHTML = ""
+                    element.innertext = ""
+                }
+            }
+            var info = localStorage['babble'];
+            info = JSON.parse(info);
+            var userinfo = info['userInfo'];
+            var name = userinfo['name'];
+            var email = userinfo['email'];
+            data.name = name;
+            data.email = email;
+            data.timestamp = Date.now();
+            postMessage(data, updateNone);
+        }
+    };
 
 //initial local storage
     function setLocalStrage() {
@@ -27,6 +60,50 @@ var Babble = (function () {
         };
         localStorage.setItem('babble', JSON.stringify(babble));
     }
+
+
+    function textareaAutoGrow() {
+        var textarea = document.querySelector('textarea');
+
+        var mainPane = document.getElementsByClassName('mainChat');
+        mainPane = mainPane[0];
+        var inputArea = document.getElementsByClassName('write-msg-area');
+        inputArea = inputArea[0];
+        var msgarea = document.getElementsByClassName('msgs');
+        msgarea = msgarea[0];
+        if (textarea && mainPane && inputArea && msgarea) {
+            var originalPercent = p2p(textarea.scrollHeight, mainPane);
+            textarea.addEventListener('input', function(evt) {
+                var oldScroll = textarea.scrollTop;
+                inputArea.style.cssText = 'height:' + originalPercent + '%';
+                var percent = p2p(textarea.scrollHeight, mainPane);
+                inputArea.style.cssText = 'height:' + percent + '%';
+                var bottom = (Number(percent));
+                var maxHeight = 100 - Number(percent);//-10
+                msgarea.style.cssText = 'bottom: ' + bottom + '%; max-height: ' + maxHeight + '%';
+                if (textarea.scrollHeight > 300) {
+                    percent = p2p(300, mainPane);
+                    inputArea.style.cssText = 'height:' + percent + '%';
+                    textarea.style.cssText = 'overflow-y: auto';
+                    textarea.scrollTop = oldScroll;
+                    bottom = (Number(percent));
+                    maxHeight = 100 - Number(percent);//-10
+                    msgarea.style.cssText = 'bottom:' + bottom + '%; max-height: ' + maxHeight + '%';
+                    } else {
+                        textarea.style.cssText = 'overflow-y: hidden';
+                }
+            }, false);
+        }
+    }
+
+    function p2p(pixel, mainPane) {
+        var screenHeight = mainPane.clientHeight;
+        var Percent = Math.round((pixel / screenHeight) * 100);
+        return Percent;
+    }
+
+
+
 
 
 //remove modal
@@ -301,7 +378,7 @@ var Babble = (function () {
     }
 
     return {
-        auto_grow: auto_grow,
+        textareaAutoGrow: textareaAutoGrow,
         deleteMSG: deleteMSG,
         modalFunctionAnon: modalFunctionAnon,
         postMessage: postMessage,
