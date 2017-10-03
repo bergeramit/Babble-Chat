@@ -1,12 +1,24 @@
 var Babble = (function () {
     var counter = 0;
     var newUUID = 0;
-
-    setLocalStrage();
+    var tabindex = 1;
     ExitUpdate();
     addlistenform2();
     addlistenform1();
     textareaAutoGrow();
+
+    window.onload = function (e){
+        if(localStorage['babble'] != null){
+            modal = document.getElementById('register');
+            modal.style.display = "none";
+            getStats(updateStats);
+            getMessages(counter, updateMessages);
+        }
+        else{
+            setLocalStrage();
+        }
+
+    }
 
     //logout beacon
     function ExitUpdate() {
@@ -14,10 +26,10 @@ var Babble = (function () {
             navigator.sendBeacon('http://localhost:9000/logout', JSON.stringify(newUUID));
         });
     }
-
+//send message if user hit enter key
     window.onkeydown = function (e) {
         var code = e.keyCode ? e.keyCode : e.which;
-        if(code == 13){
+        if(code == 13 && !e.shiftKey){
             var form1 = document.getElementById('message-form');
             if (form1 == null) {
                 return;
@@ -32,8 +44,9 @@ var Babble = (function () {
                 var element = form1.elements[i];
                 if (element.name == 'message') {
                     data.message = element.value;
-                    element.innerHTML = ""
-                    element.innertext = ""
+                    // element.innerHTML = "";
+                    // element.innertext = "";
+                    // element.value = "";
                 }
             }
             var info = localStorage['babble'];
@@ -64,12 +77,11 @@ var Babble = (function () {
 
     function textareaAutoGrow() {
         var textarea = document.querySelector('textarea');
-
         var mainPane = document.getElementsByClassName('mainChat');
         mainPane = mainPane[0];
         var inputArea = document.getElementsByClassName('write-msg-area');
         inputArea = inputArea[0];
-        var msgarea = document.getElementsByClassName('msgs');
+        var msgarea = document.getElementsByClassName('massageArea');
         msgarea = msgarea[0];
         if (textarea && mainPane && inputArea && msgarea) {
             var originalPercent = p2p(textarea.scrollHeight, mainPane);
@@ -79,7 +91,7 @@ var Babble = (function () {
                 var percent = p2p(textarea.scrollHeight, mainPane);
                 inputArea.style.cssText = 'height:' + percent + '%';
                 var bottom = (Number(percent));
-                var maxHeight = 100 - Number(percent);//-10
+                var maxHeight = 100 - Number(percent)-8;//-10
                 msgarea.style.cssText = 'bottom: ' + bottom + '%; max-height: ' + maxHeight + '%';
                 if (textarea.scrollHeight > 300) {
                     percent = p2p(300, mainPane);
@@ -87,7 +99,7 @@ var Babble = (function () {
                     textarea.style.cssText = 'overflow-y: auto';
                     textarea.scrollTop = oldScroll;
                     bottom = (Number(percent));
-                    maxHeight = 100 - Number(percent);//-10
+                    maxHeight = 100 - Number(percent)-8;//-10
                     msgarea.style.cssText = 'bottom:' + bottom + '%; max-height: ' + maxHeight + '%';
                     } else {
                         textarea.style.cssText = 'overflow-y: hidden';
@@ -118,10 +130,6 @@ var Babble = (function () {
             'email': "",
         };
         register(obj);
-        // var modal = document.getElementById("register");
-        // modal.style.display = "none";
-        // getStats(updateStats);
-        // getMessages(counter, updateMessages);
     }
 //text area grow for the message
     function auto_grow(element) {
@@ -157,12 +165,14 @@ var Babble = (function () {
         var li_num = msgg.id;//getGreeter();
         var ol = document.getElementById("msgsID");
         var li = document.createElement("li");
+        //li.setAttribute('tabindex',tabindex++);
         li.setAttribute("id", li_num); // added line
         li.style.display = "block";
         var img_li = document.createElement('img');
         img_li.setAttribute('id', 'img-msg-' + li_num);
         li.appendChild(img_li);
         var article_li = document.createElement('article'); // create all attributes in header
+        article_li.setAttribute('tabindex',tabindex);
         var cite_article_li = document.createElement('cite');
         cite_article_li.setAttribute('class', 'message-header');
         cite_article_li.setAttribute('id', 'cite-msg-' + li_num);
@@ -180,6 +190,7 @@ var Babble = (function () {
 
         var button = document.createElement('button');
         button.setAttribute('class', 'close-msg');
+        button.setAttribute('tabindex',tabindex);
         button.setAttribute('onclick', 'Babble.deleteMSG(this)');
 
         //only if this is his message
@@ -232,7 +243,25 @@ var Babble = (function () {
         if (form2 == null) {
             return;
         }
+        var form3 = document.getElementById('modal-form2');
+        if (form3 == null) {
+            return;
+        }
         form2.addEventListener('submit', function (e) {
+            e.preventDefault();
+            obj = {
+                'name': document.getElementById("name_modal").value,
+                'email': document.getElementById("email").value,
+            };
+            register(obj);
+            var modal = document.getElementById("register");
+            modal.style.display = "none";
+
+            getStats(updateStats);
+            getMessages(counter, updateMessages);
+        });
+
+        form3.addEventListener('submit', function (e) {
             e.preventDefault();
             obj = {
                 'name': document.getElementById("name_modal").value,
@@ -322,7 +351,7 @@ var Babble = (function () {
     //callback '/messages'
     function updateNone(e) {
         var msgid = e;
-        console.log("msgid: " + msgid);
+        //console.log("msgid: " + msgid);
         //do nothing
     }
 
@@ -363,6 +392,9 @@ var Babble = (function () {
                 var element = form1.elements[i];
                 if (element.name == 'message') {
                     data.message = element.value;
+                    element.innerHTML = "";
+                    element.innertext = "";
+                    element.value = "";
                 }
             }
             var info = localStorage['babble'];

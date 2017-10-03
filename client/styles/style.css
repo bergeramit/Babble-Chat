@@ -217,16 +217,35 @@ ol li article:hover{
 ol li article:hover .close-msg{
     background-color: #EBEDEC;
     display: inline;
+    font-size: 0.7rem;
 }
 .close-msg{
     border: 0;
     padding: 0;
     background-color: white;
-    font-size: 0.7rem;
+    font-size: 0;
+    /* font-size: 0.7rem; */
     font-family: 'Nunito', sans-serif;
     font-weight: bold;
     float: right;
-    display: none;
+    /* position:absolute;
+    left:-10000px; */
+}
+.msgs article:focus{
+    outline:0;
+    background-color: #EBEDEC;
+}
+.msgs article:focus .close-msg{
+    /* position: inline; */
+    background-color: #EBEDEC;
+    display: inline;
+    font-size: 0.7rem;
+}
+.msgs article .close-msg:focus {
+    /* position: inline; */
+    background-color: #EBEDEC;
+    display: inline;
+    font-size: 0.7rem;
 }
 .massageArea{
     /*margin-bottom: solid 0.5rem #F6F6F6;*/
@@ -317,6 +336,16 @@ display: inline-block;
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+/*  */
+
+/* .close-msg{
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+} */
 .modal-body ol{
     display: inline-block;
 }
@@ -410,8 +439,7 @@ width: 0%;
 .ta{
     overflow-x: hidden;
     position: absolute;
-    height: 70%;
-    margin: 2%;
+    height: 98%;
     border-radius: 2rem;
     float: left;
     padding: 0;
@@ -463,4 +491,27 @@ header img{
 .modal-body{
     display: none;
 }
+.modal-body-mobile ol li{
+    margin: 0.5rem;
+    margin-left: 1rem;
+}
+.modal-body-mobile ol li input{
+    display: block;
+    margin: 0.5rem;
+    margin-left: 0rem;
+}
+
+.modal-body-mobile ul{
+    position: absolute;
+    bottom: 4%;
+    right: 10%;
+}
+.modal-body-mobile{
+    width: 330px;
+    height: 380px;
+}
+.modal-body-mobile ul li{
+    display: inline-block;
+}
+
 }
