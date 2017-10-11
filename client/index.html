@@ -44,7 +44,7 @@
 
         <section class="write-msg-area">
             <form id="message-form" action="http://localhost:8080/messages" method="POST">
-                <textarea id="msg-to-send" class="ta" name="message"></textarea>
+                <textarea aria-label="input-textarea" id="msg-to-send" class="ta" name="message"></textarea>
                 <button class="sendbtn">
                     <img class="send-img" src="images/send.png" alt="submit form">
                 </button>
@@ -69,10 +69,10 @@
                     </ol>
                     <ol>
                         <li>
-                            <input id="name_modal2" type="text" />
+                            <input aria-label="text" id="name_modal2" type="text" />
                         </li>
                         <li>
-                            <input id="email2" type="email" />
+                            <input aria-label="Email" id="email2" type="email" />
                         </li>
                     </ol>
                     <ul>
@@ -90,11 +90,11 @@
                     <ol>
                         <li>
                             <label>Name: </label>
-                            <input id="name_modal" type="text" />
+                            <input aria-label="text" id="name_modal" type="text" />
                         </li>
                         <li>
                             <label for="email">Email: </label>
-                            <input id="email" type="email" />
+                            <input aria-label="Email" id="email" type="email" />
                         </li>
                     </ol>
                     <ul>
