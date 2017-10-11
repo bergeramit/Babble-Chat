@@ -5,7 +5,7 @@ var Babble = (function () {
     ExitUpdate();
     addlistenform2();
     addlistenform1();
-    textareaAutoGrow();
+    growbox();
 
     window.onload = function (e){
         if(localStorage['babble'] != null){
@@ -74,32 +74,32 @@ var Babble = (function () {
         localStorage.setItem('babble', JSON.stringify(babble));
     }
 
-
-    function textareaAutoGrow() {
-        var textarea = document.querySelector('textarea');
+//grows the textbox automatically
+    function growbox() {
         var mainPane = document.getElementsByClassName('mainChat');
         mainPane = mainPane[0];
-        var inputArea = document.getElementsByClassName('write-msg-area');
-        inputArea = inputArea[0];
+        var inputarea = document.getElementsByClassName('write-msg-area');
+        inputarea = inputarea[0];
         var msgarea = document.getElementsByClassName('massageArea');
         msgarea = msgarea[0];
-        if (textarea && mainPane && inputArea && msgarea) {
-            var originalPercent = p2p(textarea.scrollHeight, mainPane);
+        var textarea = document.querySelector('textarea');
+        if (textarea && mainPane && inputarea && msgarea) {
+            var firstp = p2p(textarea.scrollHeight, mainPane);
             textarea.addEventListener('input', function(evt) {
-                var oldScroll = textarea.scrollTop;
-                inputArea.style.cssText = 'height:' + originalPercent + '%';
+                var firstscroll = textarea.scrollTop;
+                inputarea.style.cssText = 'height:' + firstp + '%';
                 var percent = p2p(textarea.scrollHeight, mainPane);
-                inputArea.style.cssText = 'height:' + percent + '%';
+                inputarea.style.cssText = 'height:' + percent + '%';
                 var bottom = (Number(percent));
-                var maxHeight = 100 - Number(percent)-8;//-10
+                var maxHeight = 100 - Number(percent)-8;
                 msgarea.style.cssText = 'bottom: ' + bottom + '%; max-height: ' + maxHeight + '%';
                 if (textarea.scrollHeight > 300) {
                     percent = p2p(300, mainPane);
-                    inputArea.style.cssText = 'height:' + percent + '%';
-                    textarea.style.cssText = 'overflow-y: auto';
-                    textarea.scrollTop = oldScroll;
                     bottom = (Number(percent));
-                    maxHeight = 100 - Number(percent)-8;//-10
+                    inputarea.style.cssText = 'height:' + percent + '%';
+                    textarea.style.cssText = 'overflow-y: auto';
+                    textarea.scrollTop = firstscroll;
+                    maxHeight = 100 - Number(percent)-8;
                     msgarea.style.cssText = 'bottom:' + bottom + '%; max-height: ' + maxHeight + '%';
                     } else {
                         textarea.style.cssText = 'overflow-y: hidden';
@@ -107,7 +107,7 @@ var Babble = (function () {
             }, false);
         }
     }
-
+//change pixel to precent
     function p2p(pixel, mainPane) {
         var screenHeight = mainPane.clientHeight;
         var Percent = Math.round((pixel / screenHeight) * 100);
@@ -145,8 +145,6 @@ var Babble = (function () {
 
     //call back '/messages/:id'
     function updateDeleteMessage(e) {
-        //d.style.display = "none";
-        //update stats
     }
 
     //delete request to the server
@@ -155,7 +153,7 @@ var Babble = (function () {
         var xhr = new XMLHttpRequest();
         xhr.open('DELETE', 'http://localhost:9000/messages/' + id, true); // should be http://localhost:9000/messages/:'+id
         xhr.addEventListener('load', function (e) {
-            callback(JSON.parse(e.target.responseText));
+            callback(e);
         });
         xhr.send();
     }
@@ -410,7 +408,7 @@ var Babble = (function () {
     }
 
     return {
-        textareaAutoGrow: textareaAutoGrow,
+        growbox: growbox,
         deleteMSG: deleteMSG,
         modalFunctionAnon: modalFunctionAnon,
         postMessage: postMessage,

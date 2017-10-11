@@ -94,6 +94,16 @@ var server = http.createServer(function (request, response) {
         if (url.pathname == '/messages') {
             //check the server counter vs the client's one
             var datacounter = Number(url.query.counter);
+            if(url.query.counter == null || Number(url.query.counter) == null){
+                response.writeHead(400);
+                response.end();
+            }else if(url.query.counter < 0){
+                response.writeHead(400);
+                response.end();
+            }else if(datacounter < 0){
+                response.writeHead(400);
+                response.end();
+            }
             var msgs = messages.getMessages(datacounter);
             if (msgs.length != 0) {
                 //there are new messages and we need to update the messages counter
@@ -119,6 +129,9 @@ var server = http.createServer(function (request, response) {
                     response: response
                 }
                 stats_wait_list.push(waitstat);
+            } else {
+                response.writeHead(http.STATUS_CODES[404] + '\n');
+                response.end();
             }
         }
     } else if (request.method === 'POST') {
@@ -140,8 +153,10 @@ var server = http.createServer(function (request, response) {
             request.on('end', function () {
                 removeClient(requestBody);
             });
+        } else{
+            response.writeHead(http.STATUS_CODES[405] + '\n');
+            response.end();
         }
-
     } else if (request.method === 'DELETE') {
         var url = urlUtil.parse(request.url);
         if (url.pathname.substr(0, 10) == '/messages/') { // should be: url.pathname.substr(0,11) == '/messages/:'
@@ -154,7 +169,7 @@ var server = http.createServer(function (request, response) {
         HandleOptions(response);
     } else {
         //bad request
-        response.writeHead(405);
+        response.writeHead(http.STATUS_CODES[404] + '\n');
         response.end();
     }
 });

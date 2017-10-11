@@ -25,8 +25,14 @@
             <h2>Vegan</h2>
             <aside class="header-aside">
                 <dl>
-                        <dt><img src="images/chat.svg" alt=""></img> <span id="newMSG"></span></dt>
-                    <dt><img src="images/person.svg" alt=""></img><span id="connected"></span></dt>
+                    <dt>
+                        <img src="images/chat.svg" alt=""></img>
+                        <span id="newMSG"></span>
+                    </dt>
+                    <dt>
+                        <img src="images/person.svg" alt=""></img>
+                        <span id="connected"></span>
+                    </dt>
                     <!--<dd>This is a chatroom that focuses Vegans. Design by Amit Berger</dd>-->
                 </dl>
             </aside>
@@ -38,8 +44,11 @@
 
         <section class="write-msg-area">
             <form id="message-form" action="http://localhost:8080/messages" method="POST">
-                <textarea  id="msg-to-send" class="ta" name="message"></textarea>
-                <button class="sendbtn"><input type="image" class="send-img" src="images/send.png" alt="submit form"></button></form>
+                <textarea id="msg-to-send" class="ta" name="message"></textarea>
+                <button class="sendbtn">
+                    <input type="image" class="send-img" src="images/send.png" alt="submit form">
+                </button>
+            </form>
 
         </section>
     </article>
@@ -51,7 +60,8 @@
             <section class="modal-body">
                 <form id="modal-form" class="form-content" method="POST">
                     <ol>
-                        <li><label>Name: </label>
+                        <li>
+                            <label>Name: </label>
                         </li>
                         <li>
                             <label for="email">Email: </label>
@@ -66,16 +76,20 @@
                         </li>
                     </ol>
                     <ul>
-                        <li><button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button></li>
-                        <li><input type="submit" class="modal-register-button"></input>
+                        <li>
+                            <button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button>
+                        </li>
+                        <li>
+                            <input type="submit" class="modal-register-button"></input>
                         </li>
                     </ul>
                 </form>
             </section>
             <section class="modal-body-mobile">
-            <form id="modal-form2" class="form-content" method="POST">
+                <form id="modal-form2" class="form-content" method="POST">
                     <ol>
-                        <li><label>Name: </label>
+                        <li>
+                            <label>Name: </label>
                             <input id="name_modal" type="text" />
                         </li>
                         <li>
@@ -84,8 +98,11 @@
                         </li>
                     </ol>
                     <ul>
-                        <li><button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button></li>
-                        <li><input type="submit" class="modal-register-button"></input>
+                        <li>
+                            <button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button>
+                        </li>
+                        <li>
+                            <input type="submit" class="modal-register-button"></input>
                         </li>
                     </ul>
                 </form>
