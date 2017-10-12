@@ -60,7 +60,7 @@
             </section>
             <section class="modal-body">
                 <form id="modal-form" class="form-content" method="POST">
-                    <ol>
+                    <ol id="modal_labels">
                         <li>
                             <label>Name: </label>
                         </li>
@@ -68,39 +68,17 @@
                             <label for="email">Email: </label>
                         </li>
                     </ol>
-                    <ol>
+                    <ol id="modal_inputs">
                         <li>
-                            <input aria-label="text" id="name_modal2" type="text" />
-                        </li>
-                        <li>
-                            <input aria-label="Email" id="email2" type="email" />
-                        </li>
-                    </ol>
-                    <ul>
-                        <li>
-                            <button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button>
-                        </li>
-                        <li>
-                            <button class="saver" type="submit" class="modal-register-button">Save</button>
-                        </li>
-                    </ul>
-                </form>
-            </section>
-            <section class="modal-body-mobile">
-                <form id="modal-form2" class="form-content" method="POST">
-                    <ol>
-                        <li>
-                            <label>Name: </label>
                             <input aria-label="text" id="name_modal" type="text" />
                         </li>
                         <li>
-                            <label for="email">Email: </label>
                             <input aria-label="Email" id="email" type="email" />
                         </li>
                     </ol>
-                    <ul>
+                    <ul id="modal_buttons">
                         <li>
-                            <button type="button" class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button>
+                            <button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button>
                         </li>
                         <li>
                             <button class="saver" type="submit" class="modal-register-button">Save</button>

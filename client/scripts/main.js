@@ -2,11 +2,116 @@ var Babble = (function () {
     var counter = 0;
     var newUUID = 0;
     var tabindex = 1;
+    var mobile = false;
     ExitUpdate();
-    addlistenform2();
-    addlistenform1();
+    addlistenform();
+    // addlistenform1();
     growbox();
 
+
+//changes from normal screen modal to mobile modal
+    window.onresize = function(e){
+        var h = window.outerHeight;
+        var w = window.outerWidth;
+
+        if(mobile == false && (h <=638 || w <=638)){
+            var nModal = document.getElementsByClassName("modal-body");
+            nModal = nModal[0];
+            nModal.setAttribute("class","modal-body-mobile");
+            var nForm = document.getElementById("modal-form");
+            var olabel = document.getElementById("modal_labels");
+            var olinput = document.getElementById("modal_inputs");
+            var mButtons = document.getElementById("modal_buttons");
+            nForm.removeChild(olabel);
+            nForm.removeChild(olinput);
+            nForm.removeChild(mButtons);
+
+            var mOl = document.createElement("ol");
+            mOl.setAttribute("id","modal_inputs_list");
+            var li1 = document.createElement("li");
+            var lName = document.createElement("label");
+            lName.innerHTML = "Name: ";
+            var inName = document.createElement("input");
+            inName.setAttribute("id","name_modal");
+            inName.setAttribute("aria-label","text");
+            inName.setAttribute("type","text");
+
+            li1.appendChild(lName);
+            li1.appendChild(inName);
+            mOl.appendChild(li1);
+
+            var li2 = document.createElement("li");
+            var lEmail = document.createElement("label");
+            lEmail.innerHTML = "Email: ";
+            var inEmail = document.createElement("input");
+            inEmail.setAttribute("id","email");
+            inEmail.setAttribute("aria-label","Email");
+            inEmail.setAttribute("type","email");
+
+            li2.appendChild(lEmail);
+            li2.appendChild(inEmail);
+            mOl.appendChild(li2);
+            nForm.appendChild(mOl);
+            nForm.appendChild(mButtons);
+
+            mobile = true;
+        }else if(h > 638 && w > 638 && mobile == true){
+            mobile = false;
+            var nModal = document.getElementsByClassName("modal-body-mobile");
+            nModal = nModal[0];
+            nModal.setAttribute("class","modal-body");
+            var nForm = document.getElementById("modal-form");
+            var ol = document.getElementById("modal_inputs_list");
+            var mbutton = document.getElementById("modal_buttons");
+
+            nForm.removeChild(ol);
+            nForm.removeChild(mbutton);
+
+            var olabel = document.createElement("ol");
+            olabel.setAttribute("id","modal_labels");
+            var nli = document.createElement("li");
+            var nlabeln = document.createElement("label");
+            nlabeln.innerHTML = "Name: ";
+            nli.appendChild(nlabeln);
+            olabel.appendChild(nli);
+
+            var eli = document.createElement("li");
+            var nlabele = document.createElement("label");
+            nlabele.innerHTML = "Email: ";
+            nlabele.setAttribute("for","email");
+            eli.appendChild(nlabele);
+            olabel.appendChild(eli);
+
+            nForm.appendChild(olabel);
+
+            var olinp = document.createElement("ol");
+            olinp.setAttribute("id","modal_inputs");
+
+            var ntli1 = document.createElement("li");
+            var nText = document.createElement("input");
+            nText.setAttribute("id","name_modal");
+            nText.setAttribute("aria-label","text");
+            nText.setAttribute("type","text");
+            ntli1.appendChild(nText);
+            olinp.appendChild(ntli1);
+
+
+            var neli1 = document.createElement("li");
+            var nText = document.createElement("input");
+            nText.setAttribute("id","email");
+            nText.setAttribute("aria-label","Email");
+            nText.setAttribute("type","email");
+            neli1.appendChild(nText);
+            olinp.appendChild(neli1);
+
+            nForm.appendChild(olinp);
+            nForm.appendChild(mbutton);
+
+        }
+
+
+
+    }
     window.onload = function (e){
         if(localStorage['babble'] != null){
             modal = document.getElementById('register');
@@ -236,13 +341,9 @@ var Babble = (function () {
     }
 
     //listener for the modal form
-    function addlistenform2() {
+    function addlistenform() {
         var form2 = document.getElementById('modal-form');
         if (form2 == null) {
-            return;
-        }
-        var form3 = document.getElementById('modal-form2');
-        if (form3 == null) {
             return;
         }
         form2.addEventListener('submit', function (e) {
@@ -259,19 +360,19 @@ var Babble = (function () {
             getMessages(counter, updateMessages);
         });
 
-        form3.addEventListener('submit', function (e) {
-            e.preventDefault();
-            obj = {
-                'name': document.getElementById("name_modal").value,
-                'email': document.getElementById("email").value,
-            };
-            register(obj);
-            var modal = document.getElementById("register");
-            modal.style.display = "none";
+        // form3.addEventListener('submit', function (e) {
+        //     e.preventDefault();
+        //     obj = {
+        //         'name': document.getElementById("name_modal").value,
+        //         'email': document.getElementById("email").value,
+        //     };
+        //     register(obj);
+        //     var modal = document.getElementById("register");
+        //     modal.style.display = "none";
 
-            getStats(updateStats);
-            getMessages(counter, updateMessages);
-        });
+        //     getStats(updateStats);
+        //     getMessages(counter, updateMessages);
+        // });
     }
 
 
