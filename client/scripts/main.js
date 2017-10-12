@@ -3,6 +3,7 @@ var Babble = (function () {
     var newUUID = 0;
     var tabindex = 1;
     var mobile = false;
+    var previd = -1;
     ExitUpdate();
     addlistenform1();
     addlistenform2();
@@ -97,7 +98,12 @@ var Babble = (function () {
 //send message if user hit enter key
     window.onkeydown = function (e) {
         var code = e.keyCode ? e.keyCode : e.which;
-        if(code == 13 && !e.shiftKey){
+        var act = document.activeElement;
+        var isX = act.className;
+        if(code == 13 && isX == "close-msg"){
+            //automatically delete (hit the X button)
+        }else if(code == 13 && !e.shiftKey){
+            e.preventDefault();
             var form1 = document.getElementById('message-form');
             if (form1 == null) {
                 return;
@@ -112,9 +118,9 @@ var Babble = (function () {
                 var element = form1.elements[i];
                 if (element.name == 'message') {
                     data.message = element.value;
-                    // element.innerHTML = "";
-                    // element.innertext = "";
-                    // element.value = "";
+                    element.innerHTML = "";
+                    element.innertext = "";
+                    element.value = "";
                 }
             }
             var info = localStorage['babble'];
@@ -349,10 +355,13 @@ var Babble = (function () {
         var msg = new_mess[0];
         if (msg.toDelete == 0) {
             for (var i = 0; i < new_mess.length; ++i) {
-                //counter += 1;
                 var msg = new_mess[i];
-                var linum = addLi(msg);
-                document.getElementById("content-msg-" + linum).innerHTML = msg.message;
+                if(previd < msg.id){
+                    var linum = addLi(msg);
+                    previd = linum;
+                    //counter += 1;
+                    document.getElementById("content-msg-" + linum).innerHTML = msg.message;
+                }
             }
         } else {
             //delete message
