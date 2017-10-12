@@ -4,25 +4,26 @@ var Babble = (function () {
     var tabindex = 1;
     var mobile = false;
     ExitUpdate();
-    addlistenform();
-    // addlistenform1();
+    addlistenform1();
+    addlistenform2();
     growbox();
-
-
+    var olmodallabeln;
+    var olmodalinputn;
 //changes from normal screen modal to mobile modal
     window.onresize = function(e){
         var h = window.outerHeight;
         var w = window.outerWidth;
-
-        if(mobile == false && (h <=638 || w <=638)){
+        if(mobile == false && (h <= 638 || w <= 638)){
             var nModal = document.getElementsByClassName("modal-body");
             nModal = nModal[0];
             nModal.setAttribute("class","modal-body-mobile");
             var nForm = document.getElementById("modal-form");
-            var olabel = document.getElementById("modal_labels");
+            var olabeln = document.getElementById("modal_labels");
             var olinput = document.getElementById("modal_inputs");
+            olmodallabeln = olabeln;
+            olmodalinputn = olinput;
             var mButtons = document.getElementById("modal_buttons");
-            nForm.removeChild(olabel);
+            nForm.removeChild(olabeln);
             nForm.removeChild(olinput);
             nForm.removeChild(mButtons);
 
@@ -67,51 +68,13 @@ var Babble = (function () {
             nForm.removeChild(ol);
             nForm.removeChild(mbutton);
 
-            var olabel = document.createElement("ol");
-            olabel.setAttribute("id","modal_labels");
-            var nli = document.createElement("li");
-            var nlabeln = document.createElement("label");
-            nlabeln.innerHTML = "Name: ";
-            nli.appendChild(nlabeln);
-            olabel.appendChild(nli);
-
-            var eli = document.createElement("li");
-            var nlabele = document.createElement("label");
-            nlabele.innerHTML = "Email: ";
-            nlabele.setAttribute("for","email");
-            eli.appendChild(nlabele);
-            olabel.appendChild(eli);
-
-            nForm.appendChild(olabel);
-
-            var olinp = document.createElement("ol");
-            olinp.setAttribute("id","modal_inputs");
-
-            var ntli1 = document.createElement("li");
-            var nText = document.createElement("input");
-            nText.setAttribute("id","name_modal");
-            nText.setAttribute("aria-label","text");
-            nText.setAttribute("type","text");
-            ntli1.appendChild(nText);
-            olinp.appendChild(ntli1);
-
-
-            var neli1 = document.createElement("li");
-            var nText = document.createElement("input");
-            nText.setAttribute("id","email");
-            nText.setAttribute("aria-label","Email");
-            nText.setAttribute("type","email");
-            neli1.appendChild(nText);
-            olinp.appendChild(neli1);
-
-            nForm.appendChild(olinp);
+            nForm.appendChild(olmodallabeln);
+            nForm.appendChild(olmodalinputn);
             nForm.appendChild(mbutton);
 
         }
-
-
-
     }
+
     window.onload = function (e){
         if(localStorage['babble'] != null){
             modal = document.getElementById('register');
@@ -218,10 +181,6 @@ var Babble = (function () {
         var Percent = Math.round((pixel / screenHeight) * 100);
         return Percent;
     }
-
-
-
-
 
 //remove modal
     function modalFunctionReg() {
@@ -341,7 +300,7 @@ var Babble = (function () {
     }
 
     //listener for the modal form
-    function addlistenform() {
+    function addlistenform2() {
         var form2 = document.getElementById('modal-form');
         if (form2 == null) {
             return;
