@@ -359,20 +359,6 @@ var Babble = (function () {
             getStats(updateStats);
             getMessages(counter, updateMessages);
         });
-
-        // form3.addEventListener('submit', function (e) {
-        //     e.preventDefault();
-        //     obj = {
-        //         'name': document.getElementById("name_modal").value,
-        //         'email': document.getElementById("email").value,
-        //     };
-        //     register(obj);
-        //     var modal = document.getElementById("register");
-        //     modal.style.display = "none";
-
-        //     getStats(updateStats);
-        //     getMessages(counter, updateMessages);
-        // });
     }
 
 
