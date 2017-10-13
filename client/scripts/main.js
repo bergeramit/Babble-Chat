@@ -182,8 +182,8 @@ var Babble = (function () {
         }
     }
 //change pixel to precent
-    function p2p(pixel, mainPane) {
-        var screenHeight = mainPane.clientHeight;
+    function p2p(pixel, screen) {
+        var screenHeight = screen.clientHeight;
         var Percent = Math.round((pixel / screenHeight) * 100);
         return Percent;
     }
@@ -266,7 +266,8 @@ var Babble = (function () {
         info = JSON.parse(info);
         var userinfo = info['userInfo'];
         var Rname = userinfo['name'];
-        if (msgg.name == Rname) {
+        //i think anon cant delete anything
+        if (msgg.name == Rname && msgg.name != "Anonymous") {
             button.setAttribute('id', 'button-msg-' + li_num);
             article_li.appendChild(button);
         }
