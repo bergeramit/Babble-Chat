@@ -491,7 +491,7 @@ dl dt img{
         .Modal-body-mobile{
             display: block;
             width: 300px;
-            height: 370px;
+            height: 110px;
         }
         .Modal-body{
             display: none;
@@ -543,6 +543,6 @@ font-size: 1.2rem;
 
         .Modal-body-mobile{
             width: 270px;
-            height: 300px;
+            height: 110px;
         }
 }
