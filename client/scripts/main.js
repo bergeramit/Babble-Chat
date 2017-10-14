@@ -1,4 +1,4 @@
-var Babble = (function () {
+window.Babble = (function () {
     var counter = 0;
     var newUUID = 0;
     var tabindex = 1;
@@ -15,9 +15,9 @@ var Babble = (function () {
         var h = window.outerHeight;
         var w = window.outerWidth;
         if(mobile == false && (h <= 638 || w <= 638)){
-            var nModal = document.getElementsByClassName("modal-body");
+            var nModal = document.getElementsByClassName("Modal-body");
             nModal = nModal[0];
-            nModal.setAttribute("class","modal-body-mobile");
+            nModal.setAttribute("class","Modal-body-mobile");
             var nForm = document.getElementById("modal-form");
             var olabeln = document.getElementById("modal_labels");
             var olinput = document.getElementById("modal_inputs");
@@ -59,9 +59,9 @@ var Babble = (function () {
             mobile = true;
         }else if(h > 638 && w > 638 && mobile == true){
             mobile = false;
-            var nModal = document.getElementsByClassName("modal-body-mobile");
+            var nModal = document.getElementsByClassName("Modal-body-mobile");
             nModal = nModal[0];
-            nModal.setAttribute("class","modal-body");
+            nModal.setAttribute("class","Modal-body");
             var nForm = document.getElementById("modal-form");
             var ol = document.getElementById("modal_inputs_list");
             var mbutton = document.getElementById("modal_buttons");
@@ -150,11 +150,11 @@ var Babble = (function () {
 
 //grows the textbox automatically
     function growbox() {
-        var mainPane = document.getElementsByClassName('mainChat');
+        var mainPane = document.getElementsByClassName('MainChat');
         mainPane = mainPane[0];
-        var inputarea = document.getElementsByClassName('write-msg-area');
+        var inputarea = document.getElementsByClassName('WriteMsg');
         inputarea = inputarea[0];
-        var msgarea = document.getElementsByClassName('massageArea');
+        var msgarea = document.getElementsByClassName('MassageArea');
         msgarea = msgarea[0];
         var textarea = document.querySelector('textarea');
         if (textarea && mainPane && inputarea && msgarea) {
@@ -184,8 +184,8 @@ var Babble = (function () {
 //change pixel to precent
     function p2p(pixel, screen) {
         var screenHeight = screen.clientHeight;
-        var Percent = Math.round((pixel / screenHeight) * 100);
-        return Percent;
+        var p = Math.round((pixel / screenHeight) * 100);
+        return p;
     }
 
 //remove modal

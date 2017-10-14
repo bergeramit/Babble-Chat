@@ -20,7 +20,7 @@
 
         </nav>
     </aside>
-    <article class="mainChat">
+    <article class="Chat">
         <section class="chat-nav">
             <h2>Vegan</h2>
             <aside class="header-aside">
@@ -38,28 +38,28 @@
                 </dl>
             </aside>
         </section>
-        <section id="scoller-massageArea" class="massageArea">
+        <section id="scoller-massageArea" class="MassageArea">
             <ol id="msgsID" class="msgs">
             </ol>
         </section>
 
-        <section class="write-msg-area">
+        <section class="WriteMsg">
             <form id="message-form" action="http://localhost:8080/messages" method="POST">
-                <textarea aria-label="input-textarea" id="msg-to-send" class="ta" name="message"></textarea>
-                <button type="submit" class="sendbtn">
+                <textarea aria-label="input-textarea" id="msg-to-send" class="WriteMsg-textarea" name="message"></textarea>
+                <button type="submit" class="WriteMsg-sendbtn">
                     <img class="send-img" src="images/send.png" alt="submit form">
                 </button>
             </form>
 
         </section>
     </article>
-    <section class="main-modal" id="register">
-        <div class="modal">
-            <section class="modal-header">
+    <section class="MainModal" id="register">
+        <div class="Modal">
+            <section class="Modal-header">
                 <h2>Who are you?</h2>
             </section>
-            <section class="modal-body">
-                <form id="modal-form" class="form-content" method="POST">
+            <section class="Modal-body">
+                <form id="modal-form" class="Modal-form-content" method="POST">
                     <ol id="modal_labels">
                         <li>
                             <label>Name: </label>
@@ -78,10 +78,10 @@
                     </ol>
                     <ul id="modal_buttons">
                         <li>
-                            <button class="modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button>
+                            <button class="Modal-close-button" onclick="Babble.modalFunctionAnon()">Be Anonymous</button>
                         </li>
                         <li>
-                            <button class="saver modal-register-button" type="submit" >Save</button>
+                            <button class="Modal-register-button saver" type="submit" >Save</button>
                         </li>
                     </ul>
                 </form>
