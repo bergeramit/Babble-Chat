@@ -515,7 +515,7 @@ dl dt img{
         }
 
 
-        .WriteMsg-ta{
+        .WriteMsg-textarea{
             overflow-x: hidden;
             position: absolute;
             height: 98%;
